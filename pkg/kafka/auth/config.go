@@ -26,12 +26,14 @@ const (
 	none     = "none"
 	kerberos = "kerberos"
 	tls      = "tls"
+	basic      = "basic"
 )
 
 var authTypes = []string{
 	none,
 	kerberos,
 	tls,
+	basic,
 }
 
 // AuthenticationConfig describes the configuration properties needed authenticate with kafka cluster
@@ -39,6 +41,7 @@ type AuthenticationConfig struct {
 	Authentication string
 	Kerberos       KerberosConfig
 	TLS            TLSConfig
+	Basic          BasicConfig
 }
 
 //SetConfiguration set configure authentication into sarama config structure
@@ -55,6 +58,8 @@ func (config *AuthenticationConfig) SetConfiguration(saramaConfig *sarama.Config
 		return nil
 	case tls:
 		return setTLSConfiguration(&config.TLS, saramaConfig)
+	case basic:
+		return setBasicConfiguration(&config.Basic, saramaConfig)
 	default:
 		return errors.Errorf("Unknown/Unsupported authentication method %s to kafka cluster.", config.Authentication)
 	}
@@ -74,4 +79,8 @@ func (config *AuthenticationConfig) InitFromViper(configPrefix string, v *viper.
 	config.TLS.CaPath = v.GetString(configPrefix + tlsPrefix + suffixTLSCA)
 	config.TLS.CertPath = v.GetString(configPrefix + tlsPrefix + suffixTLSCert)
 	config.TLS.KeyPath = v.GetString(configPrefix + tlsPrefix + suffixTLSKey)
+
+	config.Basic.CaPath = v.GetString(configPrefix + tlsPrefix + suffixTLSCA)
+	config.Basic.Username = v.GetString(configPrefix + basicAuthPrefix + suffixBasicAuthUserName)
+	config.Basic.Password = v.GetString(configPrefix + basicAuthPrefix + suffixBasicAuthPassword)
 }
