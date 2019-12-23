@@ -76,6 +76,29 @@
   version = "v9"
 
 [[projects]]
+  digest = "1:b246380d23b07a54dc1be646173dce79204182f94936c0b96377b2f46afdfc56"
+  name = "github.com/aws/aws-sdk-go"
+  packages = [
+    "aws",
+    "aws/awserr",
+    "aws/awsutil",
+    "aws/client/metadata",
+    "aws/credentials",
+    "aws/endpoints",
+    "aws/request",
+    "aws/signer/v4",
+    "internal/ini",
+    "internal/sdkio",
+    "internal/sdkmath",
+    "internal/shareddefaults",
+    "private/protocol",
+    "private/protocol/rest",
+  ]
+  pruneopts = "UT"
+  revision = "f454f7e9949b40071254bd1e86a87d2b3e3f9d5d"
+  version = "v1.26.7"
+
+[[projects]]
   digest = "1:d6afaeed1502aa28e80a4ed0981d570ad91b2579193404256ce672ed0a609e0d"
   name = "github.com/beorn7/perks"
   packages = ["quantile"]
@@ -533,6 +556,13 @@
   version = "v1.0.0"
 
 [[projects]]
+  digest = "1:bb81097a5b62634f3e9fec1014657855610c82d19b9a40c17612e32651e35dca"
+  name = "github.com/jmespath/go-jmespath"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c2b33e84"
+
+[[projects]]
   digest = "1:15ec2166e33ef6c60b344a04d050eec79193517e7f5082b6233b2d09ef0d10b8"
   name = "github.com/kisielk/gotool"
   packages = [
@@ -653,10 +683,11 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:4753e9dba3c4dea247a1b65b638d74561c2f3df47fbac74b704d2603bbb41974"
+  digest = "1:01e05422528ba7c24598e603404ca1f225f9e26efaa3fbbdeafed73e8b824923"
   name = "github.com/olivere/elastic"
   packages = [
     ".",
+    "aws/v4",
     "config",
     "uritemplates",
   ]
@@ -1329,6 +1360,7 @@
     "github.com/Shopify/sarama",
     "github.com/Shopify/sarama/mocks",
     "github.com/apache/thrift/lib/go/thrift",
+    "github.com/aws/aws-sdk-go/aws/credentials",
     "github.com/bsm/sarama-cluster",
     "github.com/crossdock/crossdock-go",
     "github.com/dgraph-io/badger",
@@ -1363,6 +1395,7 @@
     "github.com/hashicorp/go-plugin",
     "github.com/kr/pretty",
     "github.com/olivere/elastic",
+    "github.com/olivere/elastic/aws/v4",
     "github.com/opentracing-contrib/go-stdlib/nethttp",
     "github.com/opentracing/opentracing-go",
     "github.com/opentracing/opentracing-go/ext",
