@@ -28,6 +28,8 @@ import (
 	"time"
 
 	"github.com/olivere/elastic"
+	aws "github.com/olivere/elastic/aws/v4"
+	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/pkg/errors"
 	"github.com/uber/jaeger-lib/metrics"
 	"go.uber.org/zap"
@@ -61,6 +63,7 @@ type Configuration struct {
 	TagDotReplacement     string
 	Enabled               bool
 	TLS                   TLSConfig
+	AWS                   AWSConfig
 	UseReadWriteAliases   bool
 	CreateIndexTemplates  bool
 	Version               uint
@@ -73,6 +76,14 @@ type TLSConfig struct {
 	CertPath       string
 	KeyPath        string
 	CaPath         string
+}
+
+// AWSConfig describes the configuration properties to connect tls enabled ElasticSearch cluster
+type AWSConfig struct {
+	Enabled         bool
+	AccessKey       string
+	AccessSecret    string
+	Region          string
 }
 
 // ClientBuilder creates new es.Client
@@ -287,10 +298,10 @@ func (c *Configuration) getConfigOptions(logger *zap.Logger) ([]elastic.ClientOp
 		// we don' have a valid token to do the check ad if we don't disable the check the service that
 		// uses this won't start.
 		elastic.SetHealthcheck(!c.AllowTokenFromContext)}
+
 	httpClient := &http.Client{
 		Timeout: c.Timeout,
 	}
-	options = append(options, elastic.SetHttpClient(httpClient))
 	if c.TLS.Enabled {
 		ctlsConfig, err := c.TLS.createTLSConfig()
 		if err != nil {
@@ -332,11 +343,16 @@ func (c *Configuration) getConfigOptions(logger *zap.Logger) ([]elastic.ClientOp
 				allowOverrideFromCtx: c.AllowTokenFromContext,
 				wrapped:              httpTransport,
 			}
-		} else {
+		} else if c.AWS.Enabled {
+			logger.Info("AWS IAM enabled, using AWS configuration")
+			creds := credentials.NewStaticCredentials(c.AWS.AccessKey, c.AWS.AccessSecret, "")
+			httpClient = aws.NewV4SigningClientWithHTTPClient(creds, c.AWS.Region, httpClient)
+		}else {
 			httpClient.Transport = httpTransport
 			options = append(options, elastic.SetBasicAuth(c.Username, c.Password))
 		}
 	}
+	options = append(options, elastic.SetHttpClient(httpClient))
 	return options, nil
 }
 

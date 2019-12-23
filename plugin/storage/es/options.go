@@ -46,6 +46,11 @@ const (
 	suffixKey                 = ".tls.key"
 	suffixCA                  = ".tls.ca"
 	suffixSkipHostVerify      = ".tls.skip-host-verify"
+	suffixAWS                 = ".aws"
+	suffixAwsEnableIAM       = suffixAWS + ".enable_iam"
+	suffixAwsAccessKey        = suffixAWS + ".access.key"
+	suffixAwsAccessSecret     = suffixAWS + ".access.secret"
+	suffixAwsRegion           = suffixAWS + ".region"
 	suffixIndexPrefix         = ".index-prefix"
 	suffixTagsAsFields        = ".tags-as-fields"
 	suffixTagsAsFieldsAll     = suffixTagsAsFields + ".all"
@@ -197,6 +202,23 @@ func addFlags(flagSet *flag.FlagSet, nsConfig *namespaceConfig) {
 		nsConfig.namespace+suffixCA,
 		nsConfig.TLS.CaPath,
 		"Path to TLS CA file")
+	// AWS IAM based authentication related configs
+	flagSet.Bool(
+		nsConfig.namespace+suffixAwsEnableIAM,
+		nsConfig.AWS.Enabled,
+		"Enable AWS IAM based authentication")
+	flagSet.String(
+		nsConfig.namespace+suffixAwsAccessKey,
+		nsConfig.AWS.AccessKey,
+		"AWS access key for based authentication")
+	flagSet.String(
+		nsConfig.namespace+suffixAwsAccessSecret,
+		nsConfig.AWS.AccessSecret,
+		"AWS access secret based authentication")
+	flagSet.String(
+		nsConfig.namespace+suffixAwsRegion,
+		nsConfig.AWS.Region,
+		"AWS region fro IAM based authentication")
 	flagSet.String(
 		nsConfig.namespace+suffixIndexPrefix,
 		nsConfig.IndexPrefix,
@@ -263,6 +285,10 @@ func initFromViper(cfg *namespaceConfig, v *viper.Viper) {
 	cfg.TLS.CertPath = v.GetString(cfg.namespace + suffixCert)
 	cfg.TLS.KeyPath = v.GetString(cfg.namespace + suffixKey)
 	cfg.TLS.CaPath = v.GetString(cfg.namespace + suffixCA)
+	cfg.AWS.Enabled = v.GetBool(cfg.namespace + suffixAwsEnableIAM)
+	cfg.AWS.AccessKey = v.GetString(cfg.namespace + suffixAwsAccessKey)
+	cfg.AWS.AccessSecret = v.GetString(cfg.namespace + suffixAwsAccessSecret)
+	cfg.AWS.Region = v.GetString(cfg.namespace + suffixAwsRegion)
 	cfg.IndexPrefix = v.GetString(cfg.namespace + suffixIndexPrefix)
 	cfg.AllTagsAsFields = v.GetBool(cfg.namespace + suffixTagsAsFieldsAll)
 	cfg.TagsFilePath = v.GetString(cfg.namespace + suffixTagsFile)
