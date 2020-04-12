@@ -52,11 +52,11 @@ const (
 	defaultKeyPath  = ""
 
 	// Basic Auth configuration options
-	basicAuthPrefix         = ".basic"
-	suffixBasicAuthUserName = ".username"
-	suffixBasicAuthPassword = ".password"
-	defaultBasicAuthPassword    = ""
-	defaultBasicAuthUsername    = ""
+	basicAuthPrefix          = ".basic"
+	suffixBasicAuthUserName  = ".username"
+	suffixBasicAuthPassword  = ".password"
+	defaultBasicAuthPassword = ""
+	defaultBasicAuthUsername = ""
 )
 
 func addKerberosFlags(configPrefix string, flagSet *flag.FlagSet) {
@@ -106,7 +106,7 @@ func addTLSFlags(configPrefix string, flagSet *flag.FlagSet) {
 		"Path to the TLS Key for the Kafka connection")
 }
 
-// AddFlags adds the flags for this package to the flagSet
+// addBasicFlags adds the flags for basic auth for Kafka
 func addBasicFlags(configPrefix string, flagSet *flag.FlagSet) {
 	flagSet.String(
 		configPrefix+basicAuthPrefix+suffixBasicAuthUserName,
